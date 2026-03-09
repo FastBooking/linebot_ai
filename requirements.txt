@@ -1,0 +1,9 @@
+flask
+openai>=1.10.0
+faiss-cpu
+numpy
+line-bot-sdk
+requests
+gunicorn
+gspread
+google-auth
