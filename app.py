@@ -15,7 +15,7 @@ from collections import defaultdict, deque
 
 # 使用者記憶，每人保留最近 20 筆對話
 user_memory = defaultdict(lambda: deque(maxlen=20))
-
+human_mode_users = set()  # 新增這行
 
 client = OpenAI() # openai > 1.0.0
 
@@ -124,6 +124,7 @@ def handle_message(event):
     ADMIN_USER_ID = "U8a12d4430ace61a53cb91f0bdd136b1c"  # 你的個人 LINE User ID
     keywords = ["真人", "人工", "真人客服", "轉人工"]
     if any(kw in user_text for kw in keywords):
+        human_mode_users.add(user_id)  # ← 加這行
         # 回覆消費者
         line_bot_api.reply_message(
             event.reply_token,
@@ -137,6 +138,19 @@ def handle_message(event):
             TextSendMessage(text=f"🔔【真人客服請求】\n用戶ID：{user_id}\n訊息內容：{user_text}\n時間：{now}")
         )
         return  # 不繼續走 AI 流程
+        
+    # 切換回 AI 模式
+    if "AI客服" in user_text:
+        human_mode_users.discard(user_id)
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="AI客服已為您服務，請問有什麼可以幫助您的？😊")
+        )
+        return
+
+    # 真人模式中，AI 不回覆
+    if user_id in human_mode_users:
+        return
 
     if user_daily_query_count(user_id) >= DAILY_LIMIT:
         line_bot_api.reply_message(
