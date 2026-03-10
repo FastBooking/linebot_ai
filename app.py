@@ -140,7 +140,7 @@ def handle_message(event):
         return  # 不繼續走 AI 流程
         
     # 切換回 AI 模式
-    if "AI客服" in user_text:
+    if "即時客服" in user_text:
         human_mode_users.discard(user_id)
         line_bot_api.reply_message(
             event.reply_token,
