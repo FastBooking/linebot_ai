@@ -144,7 +144,7 @@ def handle_message(event):
         human_mode_users.discard(user_id)
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="AI客服已為您服務，請問有什麼可以幫助您的？😊 \n 如果需要真人客服請輸入「真人」，會有專人盡速與您聯繫")
+            TextSendMessage(text="AI客服已為您服務，請問有什麼可以幫助您的？😊 \n如果需要真人客服請輸入「真人」，會有專人盡速與您聯繫")
         )
         return
 
